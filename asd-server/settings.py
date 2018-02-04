@@ -85,8 +85,13 @@ WSGI_APPLICATION = 'asd-server.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': secret_info['database']['MYSQL_NAME'],
+        'USER': secret_info['database']['MYSQL_USER'],
+        'PASSWORD': secret_info['database']['MYSQL_PWD'],
+        'HOST': secret_info['database']['MYSQL_HOST'],
+        'PORT': secret_info['database']['MYSQL_PORT'],
+        'OPTIONS': {'charset': 'utf8mb4'},
     }
 }
 
