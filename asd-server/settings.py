@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'common.apps.CommonConfig',
     'receiver.apps.ReceiverConfig',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
