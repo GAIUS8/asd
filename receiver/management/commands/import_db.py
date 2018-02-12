@@ -16,7 +16,7 @@ class Command(BaseCommand):
                    'ST_YMD={start_date}&' \
                    'ED_YMD={end_date}&' \
                    'AREA_ID={area_id}&' \
-                   'PA_CROP_SPE_ID={crop_id}&' \
+                   'PA_CROP_SPE_ID={crop_id}' \
         
         first_date = datetime.date(year=2001, month=1, day=1)
         last_date = datetime.date(year=2018, month=1, day=31)
@@ -30,7 +30,7 @@ class Command(BaseCommand):
             start_date = first_date
             while start_date < last_date:
                 if CropEnvironment.objects.filter(area_id=area_id, crop_id=crop_id, date_local=start_date).exists():
-                    start_date = start_date + datetime.timedelta(days=10)
+                    start_date = start_date + datetime.timedelta(days=1)
                     print('{}-{}-{} / pass'.format(area_id, crop_id, start_date))
                 else:
                     print('{}-{}-{}'.format(area_id, crop_id, start_date))
@@ -48,17 +48,19 @@ class Command(BaseCommand):
                     )
                 
                     url = base_url.format(**prams)
-                    
+
                     response = requests.get(url)
                     soup = BeautifulSoup(response.text, 'lxml')
                     items = soup.find_all('item')
                     if len(items) == 0:
                         print('일일 트레픽 초과')
+                        print(start_date)
+                        print(url)
                         return
                     else:
                         self.data_saver(items=items)
                         start_date = end_date + datetime.timedelta(days=1)
-                
+                    
     def data_saver(self, items):
         """
         DB에 저장
