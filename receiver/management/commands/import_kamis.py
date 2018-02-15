@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 import requests
 from common.models import KamisIndex, KamisPriceInfo
+from decimal import Decimal
 
 
 class Command(BaseCommand):
@@ -47,9 +48,7 @@ class Command(BaseCommand):
                 else:
                     print('{}-{}-{}-{}'.format(item_name, kind_name, quality_name, start_date))
                     
-                    start_date = datetime.date(year=2018, month=1, day=5)
-                    
-                    end_date = start_date
+                    end_date = start_date + datetime.timedelta(days=9)
 
                     start_date_text = start_date.strftime('%Y-%m-%d')
                     end_date_text = end_date.strftime('%Y-%m-%d')
@@ -68,19 +67,53 @@ class Command(BaseCommand):
                     )
         
                     url = base_url.format(**params)
-                    print(url)
                     response = requests.get(url)
-                    print(response)
                     if response.status_code == 200:
                         plain_text = response.json()
-                        items = plain_text.get('data').get('item')
-                        if items is None:
+                        decodings = plain_text.get('data')
+                        if type(decodings) == type(list()):
                             pass  # target 날짜에 해당하는 데이터 없음
                         else:
+                            items = decodings.get('item')
+
                             for data in items:
                                 if data.get('countyname') in ['평균', '평년']:
                                     pass
                                 else:
-                                    pass  # create
+                                    place_name = data.get('countyname')
+                                    if place_name is None:
+                                        place_name = '-'
+                                    market_name = data.get('marketname')
+                                    if market_class is None:
+                                        market_class = '-'
+                                    price = data.get('price')
+                                    if price is None:
+                                        price = Decimal(0)
+                                    else:
+                                        price = Decimal(price.replace(',', ''))
+                                    year = int(data.get('yyyy'))
+                                    month = int(data.get('regday').split('/')[0])
+                                    day = int(data.get('regday').split('/')[1])
+                                    date_local = datetime.date(year=year, month=month, day=day)
+                                    
+                                    KamisPriceInfo.objects.get_or_create(
+                                        date_local=date_local,
+                                        category_name=category_name,
+                                        item_name=item_name,
+                                        kind_name=kind_name,
+                                        quality_name=quality_name,
+                                        category_code=category_code,
+                                        item_code=item_code,
+                                        kind_code=kind_code,
+                                        quality_code=quality_code,
+                                        market_class=market_class,
+                                        place_name=place_name,
+                                        market_name=market_name,
+                                        price=price,
+                                        unit='kg',
+                                    )
+
                     else:
-                        print('요청에 실패했습니다.')
+                        print('{}|BAD REQUEST'.format(response.status_code))
+                        
+                    start_date = end_date + datetime.timedelta(days=1)
