@@ -59,6 +59,33 @@ class KamisIndex(models.Model):
 
     class Meta:
         db_table = 'kamis_index'
-        verbose_name = 'Kaims Index'
+        verbose_name = 'Kamis Index'
         verbose_name_plural = verbose_name
 
+
+class KamisPriceInfo(models.Model):
+    date_local = models.DateField(blank=True, null=True)
+    category_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='대분류')
+    item_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='품명')
+    kind_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='세부 품명')
+    quality_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='등급')
+    category_code = models.CharField(max_length=100, blank=True, null=True, verbose_name='대분류 코드')
+    item_code = models.CharField(max_length=100, blank=True, null=True, verbose_name='품명 코드')
+    kind_code = models.CharField(max_length=100, blank=True, null=True, verbose_name='세부 품명')
+    quality_code = models.CharField(max_length=100, blank=True, null=True, verbose_name='등급 코드')
+    market_class = models.CharField(max_length=100, blank=True, null=True, verbose_name='도소매 구분', help_text='01:retail, 02:wholesale')
+    place_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='지역명')
+    market_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='시장명')
+    
+    price = models.DecimalField(max_digits=14, decimal_places=2, blank=True, null=True, verbose_name='단위당 가격')
+    unit = models.CharField(max_length=100, blank=True, null=True, verbose_name='단위')
+
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    class Meta:
+        db_table = 'kamis_price_info'
+        verbose_name = 'Kamis_Price_Info'
+        verbose_name_plural = verbose_name
+    
+        index_together = ['date_local', 'category_code', 'item_code', 'kind_code', 'quality_code']
