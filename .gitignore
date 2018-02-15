@@ -1,6 +1,8 @@
 # custom
-.spl
+*.spl
 .secret
+*.csv
+*.xlsx
 
 # Created by https://www.gitignore.io/api/macos,python,django,pycharm
 

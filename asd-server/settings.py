@@ -22,8 +22,10 @@ CONFIG_SECRET_DIR = os.path.join(BASE_DIR, '.secret')
 CONFIG_SECRET_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'secret_info.json')
 secret_info = json.loads(open(CONFIG_SECRET_COMMON_FILE).read())
 
-# Key Settings
+# Key Settings - location-weather
 API_SERVICE_KEY = secret_info['service_key']
+KAMIS_SERVICE_KEY = secret_info['kamis']['api_key']
+KAMIS_ID = secret_info['kamis']['certificated_id']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/

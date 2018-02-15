@@ -42,3 +42,23 @@ class CropEnvironment(models.Model):
         verbose_name_plural = verbose_name
         
         index_together = ['date_local', 'area_id', 'crop_id']
+        
+
+class KamisIndex(models.Model):
+    category_name = models.CharField(max_length=100, blank=True, null=True)
+    item_name = models.CharField(max_length=100, blank=True, null=True)
+    kind_name = models.CharField(max_length=100, blank=True, null=True)
+    quality_name = models.CharField(max_length=100, blank=True, null=True)
+    category_code = models.CharField(max_length=100, blank=True, null=True)
+    item_code = models.CharField(max_length=100, blank=True, null=True)
+    kind_code = models.CharField(max_length=100, blank=True, null=True)
+    quality_code = models.CharField(max_length=100, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    class Meta:
+        db_table = 'kamis_index'
+        verbose_name = 'Kaims Index'
+        verbose_name_plural = verbose_name
+
