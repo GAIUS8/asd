@@ -87,7 +87,7 @@ class Command(BaseCommand):
                                     if market_class is None:
                                         market_class = '-'
                                     price = data.get('price')
-                                    if price is None:
+                                    if price in [None, '-']:
                                         price = Decimal(0)
                                     else:
                                         price = Decimal(price.replace(',', ''))
